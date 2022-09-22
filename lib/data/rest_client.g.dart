@@ -13,7 +13,7 @@ class _RestClient implements RestClient {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://10.0.0.9:3000/api';
+    baseUrl ??= 'https://test.shinanoproject.it/api';
   }
 
   final Dio _dio;

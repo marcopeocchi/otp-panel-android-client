@@ -1,11 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:dio_logging_interceptor/dio_logging_interceptor.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background/flutter_background.dart';
 import 'package:sms_listener/data/rest_client.dart';
 import 'package:sms_listener/models/sms_model.dart';
 import 'package:telephony/telephony.dart';
 
 final telephony = Telephony.instance;
+const androidConfig = FlutterBackgroundAndroidConfig(
+  notificationTitle: "Mephisto Waltz",
+  notificationText: "Running background SMS listener",
+  notificationImportance: AndroidNotificationImportance.Default,
+);
 
 void publishMessage(SmsMessage message) {
   final RestClient client = RestClient(
@@ -34,6 +40,7 @@ void main() async {
     },
     onBackgroundMessage: backgroundMessageHandler,
   );
+  await FlutterBackground.initialize(androidConfig: androidConfig);
   runApp(const MyApp());
 }
 
@@ -46,14 +53,30 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    enableBackgroundExec();
+  }
+
+  Future<bool> enableBackgroundExec() async {
+    return await FlutterBackground.enableBackgroundExecution();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SMS Listener',
       theme: ThemeData(
+        brightness: Brightness.dark,
         primarySwatch: Colors.indigo,
       ),
       debugShowCheckedModeBanner: false,
