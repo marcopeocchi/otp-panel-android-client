@@ -4,7 +4,7 @@ import 'package:sms_listener/models/sms_model.dart';
 
 part 'rest_client.g.dart';
 
-@RestApi(baseUrl: 'https://test.shinanoproject.it/api')
+@RestApi()
 abstract class RestClient {
   factory RestClient(Dio dio, {String baseUrl}) = _RestClient;
 
